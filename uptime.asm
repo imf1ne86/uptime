@@ -7,7 +7,7 @@
 ; * Формат компиляции: ".com"-файл.
 ; * Язык программирования: Turbo Assembler, ver. 2.0.
 ; * Кодировки исходного кода: CP866.
-; * Размер исполнительного файла: 504 байта.
+; * Размер исполнительного файла: 506 байт.
 ; * Размер TSR-части в ОЗУ: 448 байт.
 ; * Системные требования:
 ; * 1) IBM PC AT;
@@ -42,7 +42,7 @@ OFFSET_SS    EQU 17; секунды (0 - 59)
 Start:
   jmp NEAR PTR Install
 
-; обработчик вектора прерывания 9
+; обработчик вектора прерывания 09h
 TSR_Int09h:
   push AX
   push ES
@@ -57,6 +57,7 @@ TSR_Int09h:
   jne Exit_09h
   in AL, 60h
   cmp AL, SC_I
+  jne Exit_09h
   call NEAR PTR do_it
 Exit_09h:
   pop ES
@@ -262,8 +263,8 @@ write_to_update_d ENDP
 ; формате ASCII в виде двух цифр
 ; ------------------------------------------------------------
 get_ascii_2digits PROC NEAR
-  mov [BYTE PTR CS:asc_d], '0'
-  mov [BYTE PTR CS:asc_d + 1], '0'
+  mov [BYTE PTR CS:asc_d], TO_DIGIT
+  mov [BYTE PTR CS:asc_d + 1], TO_DIGIT
   pushf
   push AX
   mov AL, [BYTE PTR CS:bin_d]
